@@ -22,6 +22,8 @@ namespace Felfel.Logging
 
         public HttpClient Client { get; }
 
+        public SnakeCaseNamingStrategy SnakeCasing { get; }
+
         public JsonSerializerSettings JsonSerializerSettings { get; }
 
         /// <summary>Creates the sink for a given collector endpoint.</summary>
@@ -35,9 +37,10 @@ namespace Felfel.Logging
             EndpointUri = endpointUri;
             Client = clientBuilder == null ? new HttpClient() : clientBuilder();
 
+            SnakeCasing = new SnakeCaseNamingStrategy();
             var contractResolver = new DefaultContractResolver
             {
-                NamingStrategy = new SnakeCaseNamingStrategy()
+                NamingStrategy = SnakeCasing
             };
 
             JsonSerializerSettings = new JsonSerializerSettings
@@ -110,7 +113,7 @@ namespace Felfel.Logging
             {
                 string propertyName = String.IsNullOrEmpty(content.PayloadType) ? content.Context : content.PayloadType;
                 propertyName = propertyName.Replace(".", "_");
-                propertyName = new SnakeCaseNamingStrategy().GetPropertyName(propertyName, false);
+                propertyName = SnakeCasing.GetPropertyName(propertyName, false);
                 json = json.Replace(LogEntryDto.DataPropertyPlaceholderName, propertyName);
             }
             
