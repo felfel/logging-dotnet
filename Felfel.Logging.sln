@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Felfel.Logging", "Felfel.Logging\Felfel.Logging.csproj", "{FE75080D-ABDD-43E8-AB05-3660C5F80902}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Felfel.Logging.UnitTests", "Felfel.Logging.UnitTests\Felfel.Logging.UnitTests.csproj", "{A0AE3767-B831-4C32-8EFF-F226205A6E29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{FE75080D-ABDD-43E8-AB05-3660C5F80902}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE75080D-ABDD-43E8-AB05-3660C5F80902}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE75080D-ABDD-43E8-AB05-3660C5F80902}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0AE3767-B831-4C32-8EFF-F226205A6E29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0AE3767-B831-4C32-8EFF-F226205A6E29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0AE3767-B831-4C32-8EFF-F226205A6E29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0AE3767-B831-4C32-8EFF-F226205A6E29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

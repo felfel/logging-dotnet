@@ -78,14 +78,14 @@ namespace Felfel.Logging
                         Context = $"{nameof(HttpSink)}.Error",
                         Data = new
                         {
-                            Error = "Could not unwrap log entry",
+                            Error = "Could not unwrap log entry.",
                             Message = logEvent.RenderMessage(),
                             Level = logEvent.Level.ToString()
                         }
                     };
                 }
 
-                var dto = ParseLogEntry(logEntry);
+                var dto = LogEntryParser.ParseLogEntry(logEntry);
                 return CreateHttpContent(dto);
             }
             catch (Exception e)
@@ -121,35 +121,6 @@ namespace Felfel.Logging
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             return httpContent;
-        }
-
-
-        private LogEntryDto ParseLogEntry(LogEntry entry)
-        {
-            var exception = entry.Exception;
-            ExceptionInfo exceptionInfo = null;
-            if (exception != null)
-            {
-                ExceptionData exceptionData = ExceptionParser.GetExceptionData(exception);
-
-                exceptionInfo = new ExceptionInfo
-                {
-                    ExceptionType = exception.GetType().Name,
-                    ErrorMessage = exception.Message,
-                    StackTrace = exceptionData.FormattedException,
-                    ExceptionHash = exceptionData.ExceptionHash
-                };
-            }
-
-            return new LogEntryDto
-            {
-                Timestamp = entry.TimestampOverride,
-                Level = entry.LogLevel.ToString(),
-                Context = entry.Context ?? "",
-                PayloadType = entry.PayloadType ?? "",
-                Data = entry.Data,
-                Exception = exceptionInfo
-            };
         }
 
 
