@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.5;net45</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Felfel.Logging</PackageId>
+    <Authors>Philipp Sumi</Authors>
+    <Description>Simple and highly opinionated sink for structured data that is posted as JSON.</Description>
+    <Copyright>Copyright (c) 2018 FELFEL</Copyright>
+    <PackageLicenseUrl>https://github.com/felfel/logging-dotnet/blob/master/LICENSE</PackageLicenseUrl>
+    <AssemblyName>Felfel.Logging</AssemblyName>
+    <RootNamespace>Felfel.Logging</RootNamespace>
+    <Product>Felfel.Logging</Product>
+    <Company>FELFEL - Good Food at Work</Company>
+    <PackageProjectUrl>https://github.com/felfel/logging-dotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/felfel/logging-dotnet</RepositoryUrl>
+    <PackageIconUrl>http://gravatar.com/avatar/2ac36575f81dd95ffbebc8a6eb0315e5?s=400</PackageIconUrl>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.5\Felfel.Logging.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.1.1" />
+    <PackageReference Include="System.Net.Http" Version="4.3.3" />
+  </ItemGroup>
+
+</Project>
