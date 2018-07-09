@@ -18,8 +18,8 @@ namespace Felfel.Logging
                 {
                     ExceptionType = exception.GetType().Name,
                     ErrorMessage = exception.Message,
-                    StackTrace = exceptionData.FormattedException,
-                    ExceptionHash = exceptionData.ExceptionHash
+                    ExceptionHash = exceptionData.ExceptionHash,
+                    StackTrace = ExceptionParser.Print(exceptionData, true)
                 };
             }
 

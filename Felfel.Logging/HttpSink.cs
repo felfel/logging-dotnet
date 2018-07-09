@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Serilog.Events;
-using Serilog.Sinks.PeriodicBatching;
 
 namespace Felfel.Logging
 {
@@ -16,7 +12,7 @@ namespace Felfel.Logging
     /// cater to offline scenarios, dropped messages or anything, but
     /// it'll do for the little things we do in .NET world.
     /// </summary>
-    public class HttpSink : PeriodicBatchingSink
+    public class HttpSink : LogEntrySink
     {
         public string EndpointUri { get; }
 
@@ -51,54 +47,26 @@ namespace Felfel.Logging
         }
 
         /// <summary>
-        /// Triggers individual HTTP Posts to Sumologic for each batched Serilog entry.
+        /// Triggers individual HTTP Posts to the configured endpoint
+        /// for each batched log entry.
         /// </summary>
-        protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
+        protected override Task WriteLogEntry(LogEntryDto entryDto)
         {
-            var tasks = events.Select(le => Client.PostAsync(EndpointUri, ProcessLogEvent(le)));
-            HttpResponseMessage[] responses = await Task.WhenAll(tasks).ConfigureAwait(false);
+            var content = GetHttpContent(entryDto);
+            return Client.PostAsync(EndpointUri, content);
         }
 
 
-        private HttpContent ProcessLogEvent(LogEvent logEvent)
+        private HttpContent GetHttpContent(LogEntryDto dto)
         {
             try
             {
-                logEvent.Properties.TryGetValue(Logger.EntryPropertyName, out var entryProperty);
-                var logEntry = (entryProperty as ScalarValue)?.Value as LogEntry;
-
-                if (logEntry == null)
-                {
-                    //something went wrong
-                    logEntry = new LogEntry
-                    {
-                        TimestampOverride = logEvent.Timestamp,
-                        LogLevel = LogLevel.Fatal,
-                        Exception = logEvent.Exception,
-                        Context = $"{nameof(HttpSink)}.Error",
-                        Data = new
-                        {
-                            Error = "Could not unwrap log entry.",
-                            Message = logEvent.RenderMessage(),
-                            Level = logEvent.Level.ToString()
-                        }
-                    };
-                }
-
-                var dto = LogEntryParser.ParseLogEntry(logEntry);
                 return CreateHttpContent(dto);
             }
             catch (Exception e)
             {
-                var msg = new LogEntryDto
-                {
-                    Timestamp = DateTimeOffset.Now,
-                    Level = LogLevel.Fatal.ToString(),
-                    Context = "Logging.Error",
-                    PayloadType = "Loggin.Error",
-                    Data = new { Error = e.ToString() }
-                };
-                return CreateHttpContent(msg);
+                dto = ProcessLoggingException(e);
+                return CreateHttpContent(dto);
             }
         }
 

@@ -6,9 +6,9 @@ namespace Felfel.Logging
     /// <summary>
     /// Serializable representation of a <see cref="LogEntry"/>.
     /// </summary>
-    internal class LogEntryDto
+    public class LogEntryDto
     {
-        internal const string DataPropertyPlaceholderName = "xxyyzz";
+        internal const string DataPropertyPlaceholderName = "@logentry_data";
 
         [JsonProperty("@timestamp")]
         public DateTimeOffset Timestamp { get; set; }
@@ -69,15 +69,15 @@ namespace Felfel.Logging
         public string ErrorMessage { get; set; }
 
         /// <summary>
-        /// Full stack trace.
-        /// </summary>
-        public string StackTrace { get; set; }
-
-        /// <summary>
         /// A hash of the exception, built from the exception's stack
         /// trace (plus nested / hidden exceptions). Can be used
         /// to aggregate / count similar exceptions.
         /// </summary>
         public string ExceptionHash { get; set; }
+
+        /// <summary>
+        /// Full stack trace.
+        /// </summary>
+        public string StackTrace { get; set; }
     }
 }
