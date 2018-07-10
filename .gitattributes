@@ -1,0 +1,7 @@
+* text=auto
+
+*.cs     diff=csharp
+
+# ensure .sh files are always lf since otherwise the build would break
+*.sh text eol=lf
+Dockerfile text eol=lf
