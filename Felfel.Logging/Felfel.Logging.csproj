@@ -15,9 +15,9 @@
     <PackageProjectUrl>https://github.com/felfel/logging-dotnet</PackageProjectUrl>
     <RepositoryUrl>https://github.com/felfel/logging-dotnet</RepositoryUrl>
     <PackageIconUrl>http://gravatar.com/avatar/2ac36575f81dd95ffbebc8a6eb0315e5?s=400</PackageIconUrl>
-    <Version>1.0.3</Version>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
-    <FileVersion>1.0.3.0</FileVersion>
+    <Version>1.0.4</Version>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+    <FileVersion>1.0.4.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

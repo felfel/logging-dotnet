@@ -20,22 +20,39 @@ namespace Felfel.Logging
 
         /// <summary>
         /// Logger context, which will be part of the serialized data unless explicitly
-        /// set through the <see cref="LogEntry.Context"/> property.
+        /// set through the <see cref="LogEntry.Context"/> property. Identifies messages
+        /// that belong together (along with the <see cref="LogEntry.PayloadType"/> at finer
+        /// granularity).
         /// </summary>
         public string Context { get; }
 
-        private Logger(string context)
+        /// <summary>
+        /// Concatenates the the <see cref="Context"/> and the
+        /// <see cref="LogEntry.PayloadType"/> of a log entry
+        /// in order to ensure a qualified (and unique) payload type name.
+        /// </summary>
+        public bool PrefixPayloadType { get; }
+
+        private Logger(string context, bool prefixPayloadType)
         {
             Context = context;
+            PrefixPayloadType = prefixPayloadType;
         }
 
         /// <summary>
         /// Creates a new logger instance, using the
         /// type parameter as the logger's <see cref="Context"/>.
         /// </summary>
-        public static Logger Create<T>()
+        /// <typeparam name="T">Uses the specified type's name as the logger's
+        /// <see cref="Context"/>.</typeparam>
+        /// <param name="prefixPayloadType">If true, the <see cref="LogEntry.PayloadType"/>
+        /// will be automatically prefixed with the logger's <see cref="Context"/> in order
+        /// to create a qualified payload name, which reduces the risk of potential
+        /// duplicates across app/service.
+        /// </param>
+        public static Logger Create<T>(bool prefixPayloadType = true)
         {
-            return Create(typeof(T));
+            return Create(typeof(T), prefixPayloadType);
         }
 
         /// <summary>
@@ -43,7 +60,14 @@ namespace Felfel.Logging
         /// specified <paramref name="contextType"/> 
         /// as the logger's <see cref="Context"/>.
         /// </summary>
-        public static Logger Create(Type contextType)
+        /// <param name="contextType">Uses the specified type's name as the
+        /// <see cref="Context"/>.</param>
+        /// <param name="prefixPayloadType">If true, the <see cref="LogEntry.PayloadType"/>
+        /// will be automatically prefixed with the logger's <see cref="Context"/> in order
+        /// to create a qualified payload name, which reduces the risk of potential
+        /// duplicates across app/service.
+        /// </param>
+        public static Logger Create(Type contextType, bool prefixPayloadType = true)
         {
             return Create(contextType.Name);
         }
@@ -51,10 +75,17 @@ namespace Felfel.Logging
         /// <summary>
         /// Creates a new logger instance for a given context.
         /// </summary>
-        /// <returns></returns>
-        public static Logger Create(string context = "")
+        /// <param name="context">A context identifier which can be used to query
+        /// messages that belong together. This is the logger's "name" in many
+        /// logging frameworks. </param>
+        /// <param name="prefixPayloadType">If true, the <see cref="LogEntry.PayloadType"/>
+        /// will be automatically prefixed with the logger's <see cref="Context"/> in order
+        /// to create a qualified payload name, which reduces the risk of potential
+        /// duplicates across app/service.
+        /// </param>
+        public static Logger Create(string context = "", bool prefixPayloadType = true)
         {
-            return new Logger(context);
+            return new Logger(context, prefixPayloadType);
         }
 
         /// <summary>
@@ -69,12 +100,16 @@ namespace Felfel.Logging
                 entry.Context = Context;
             }
 
+            if (PrefixPayloadType && !String.IsNullOrEmpty(Context))
+            {
+                entry.PayloadType = $"{entry.Context}.{entry.PayloadType}";
+            }
+
             //send to Serilog (will be unwrapped later again by our custom sink)
             var prop = new LogEventProperty(EntryPropertyName, new ScalarValue(entry));
             LogEventProperty[] props = {prop};
             LogEvent le = new LogEvent(DateTimeOffset.Now, Parse(entry.LogLevel), null, EmptyMessageTemplate, props);
             Serilog.Log.Logger.Write(le);
-
             
             LogEventLevel Parse(LogLevel level)
             {
