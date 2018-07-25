@@ -8,92 +8,93 @@ namespace Felfel.Logging
     public static class LoggerExtensions
     {
         private static void WriteEntry(Logger logger, LogLevel level, string payloadType, object data,
-            Exception exception)
+            Exception exception, string message)
         {
             LogEntry entry = new LogEntry
             {
                 LogLevel = level,
                 PayloadType = payloadType,
                 Data = data,
-                Exception = exception
+                Exception = exception,
+                Message = message
             };
 
             logger.Log(entry);
         }
 
-        public static void Debug(this Logger logger, string payloadType, object data)
+        public static void Debug(this Logger logger, string payloadType, object data, string message = null)
         {
-            WriteEntry(logger, LogLevel.Debug, payloadType, data, null);
+            WriteEntry(logger, LogLevel.Debug, payloadType, data, null, message);
         }
 
-        public static void Debug(this Logger logger, Exception exception)
+        public static void Debug(this Logger logger, Exception exception, string message = null)
         {
-            WriteEntry(logger, LogLevel.Debug, "", null, exception);
+            WriteEntry(logger, LogLevel.Debug, "", null, exception, message);
         }
 
-        public static void Debug(this Logger logger, Exception exception, string payloadType, object data)
+        public static void Debug(this Logger logger, Exception exception, string payloadType, object data, string message = null)
         {
-            WriteEntry(logger, LogLevel.Debug, payloadType, data, exception);
+            WriteEntry(logger, LogLevel.Debug, payloadType, data, exception, message);
         }
 
-        public static void Information(this Logger logger, string payloadType, object data)
+        public static void Information(this Logger logger, string payloadType, object data, string message = null)
         {
-            WriteEntry(logger, LogLevel.Info, payloadType, data, null);
+            WriteEntry(logger, LogLevel.Info, payloadType, data, null, message);
         }
 
-        public static void Information(this Logger logger, Exception exception)
+        public static void Information(this Logger logger, Exception exception, string message = null)
         {
-            WriteEntry(logger, LogLevel.Info, "", null, exception);
+            WriteEntry(logger, LogLevel.Info, "", null, exception, message);
         }
 
-        public static void Information(this Logger logger, Exception exception, string payloadType, object data)
+        public static void Information(this Logger logger, Exception exception, string payloadType, object data, string message = null)
         {
-            WriteEntry(logger, LogLevel.Info, payloadType, data, exception);
+            WriteEntry(logger, LogLevel.Info, payloadType, data, exception, message);
         }
 
-        public static void Warning(this Logger logger, string payloadType, object data)
+        public static void Warning(this Logger logger, string payloadType, object data, string message = null)
         {
-            WriteEntry(logger, LogLevel.Warning, payloadType, data, null);
+            WriteEntry(logger, LogLevel.Warning, payloadType, data, null, message);
         }
 
-        public static void Warning(this Logger logger, Exception exception)
+        public static void Warning(this Logger logger, Exception exception, string message = null)
         {
-            WriteEntry(logger, LogLevel.Warning, "", null, exception);
+            WriteEntry(logger, LogLevel.Warning, "", null, exception, message);
         }
 
-        public static void Warning(this Logger logger, Exception exception, string payloadType, object data)
+        public static void Warning(this Logger logger, Exception exception, string payloadType, object data, string message = null)
         {
-            WriteEntry(logger, LogLevel.Warning, payloadType, data, exception);
+            WriteEntry(logger, LogLevel.Warning, payloadType, data, exception, message);
         }
 
-        public static void Error(this Logger logger, string payloadType, object data)
+        public static void Error(this Logger logger, string payloadType, object data, string message = null)
         {
-            WriteEntry(logger, LogLevel.Error, payloadType, data, null);
+            WriteEntry(logger, LogLevel.Error, payloadType, data, null, message);
         }
 
-        public static void Error(this Logger logger, Exception exception)
+        public static void Error(this Logger logger, Exception exception, string message = null)
         {
-            WriteEntry(logger, LogLevel.Error, "", null, exception);
+            WriteEntry(logger, LogLevel.Error, "", null, exception, message);
         }
 
-        public static void Error(this Logger logger, Exception exception, string payloadType, object data)
+        public static void Error(this Logger logger, Exception exception, string payloadType, object data, string message = null)
         {
-            WriteEntry(logger, LogLevel.Error, payloadType, data, exception);
+            WriteEntry(logger, LogLevel.Error, payloadType, data, exception, message);
         }
 
-        public static void Fatal(this Logger logger, string payloadType, object data)
+        public static void Fatal(this Logger logger, string payloadType, object data, string message = null)
         {
-            WriteEntry(logger, LogLevel.Fatal, payloadType, data, null);
+            WriteEntry(logger, LogLevel.Fatal, payloadType, data, null, message);
         }
 
-        public static void Fatal(this Logger logger, Exception exception)
+        public static void Fatal(this Logger logger, Exception exception, string message = null)
         {
-            WriteEntry(logger, LogLevel.Fatal, "", null, exception);
+            WriteEntry(logger, LogLevel.Fatal, "", null, exception, message);
         }
 
-        public static void Fatal(this Logger logger, Exception exception, string payloadType, object data)
+        public static void Fatal(this Logger logger, Exception exception, string payloadType, object data, string message = null)
         {
-            WriteEntry(logger, LogLevel.Fatal, payloadType, data, exception);
+            WriteEntry(logger, LogLevel.Fatal, payloadType, data, exception, message);
         }
     }
 }

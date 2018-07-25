@@ -41,6 +41,12 @@ namespace Felfel.Logging
         public LogLevel LogLevel { get; set; }
 
         /// <summary>
+        /// Human readable complementary message. Optional, focus should be
+        /// on structured data.
+        /// </summary>
+        public string Message { get; set; }
+
+        /// <summary>
         /// The actual structured payload to be serialized in JSON.
         /// </summary>
         public object Data { get; set; }

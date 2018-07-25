@@ -35,6 +35,13 @@ namespace Felfel.Logging
         /// This simplifies querying for actualy exceptions.
         /// </summary>
         public bool IsException => Exception != null;
+        
+        /// <summary>
+        /// Human readable complementary message. Optional, focus should be
+        /// on structured data.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Message { get; set; }
 
         /// <summary>
         /// The actual structured payload to be serialized in JSON.

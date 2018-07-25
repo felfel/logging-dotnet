@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 [assembly:InternalsVisibleTo("Felfel.Logging.UnitTests")]
 
@@ -31,7 +32,7 @@ namespace Felfel.Logging
             var data = entry.Data;
             if (data is string)
             {
-                data = new {Message = data};
+                data = new { Message = data };
             }
 
             return new LogEntryDto
@@ -39,6 +40,7 @@ namespace Felfel.Logging
                 Timestamp = entry.TimestampOverride,
                 Level = entry.LogLevel.ToString(),
                 Context = entry.Context ?? "",
+                Message = String.IsNullOrEmpty(entry.Message) ? null : entry.Message,
                 PayloadType = entry.PayloadType ?? "",
                 Data = data,
                 Exception = exceptionInfo
