@@ -34,7 +34,7 @@ namespace Felfel.Logging
         /// Indicates whether exception information is available or not.
         /// This simplifies querying for actualy exceptions.
         /// </summary>
-        public bool IsException => Exception != null;
+        public bool IsException => ExceptionInfo != null;
         
         /// <summary>
         /// Human readable complementary message. Optional, focus should be
@@ -56,7 +56,7 @@ namespace Felfel.Logging
         /// exception was registered.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public ExceptionInfo Exception { get; set; }
+        public ExceptionInfo ExceptionInfo { get; set; }
     }
 
 
