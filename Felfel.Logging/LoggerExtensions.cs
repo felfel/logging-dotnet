@@ -14,7 +14,7 @@ namespace Felfel.Logging
             {
                 LogLevel = level,
                 PayloadType = payloadType,
-                Data = data,
+                Payload = data,
                 Exception = exception,
                 Message = message
             };

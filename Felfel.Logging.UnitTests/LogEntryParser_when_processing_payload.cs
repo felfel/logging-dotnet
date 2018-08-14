@@ -9,11 +9,11 @@ namespace Felfel.Logging.UnitTests
         [TestMethod]
         public void Simple_string_should_be_wrapped_in_anonymous_type()
         {
-            var le = new LogEntry { Data = "hello world" };
+            var le = new LogEntry { Payload = "hello world" };
             var dto = LogEntryParser.ParseLogEntry(le);
-            dto.Data.Should().NotBeOfType<string>();
+            dto.Payload.Should().NotBeOfType<string>();
 
-            dynamic data = dto.Data;
+            dynamic data = dto.Payload;
             string message = data.Message;
             message.Should().Be("hello world");
         }
@@ -25,7 +25,7 @@ namespace Felfel.Logging.UnitTests
         {
             var le = new LogEntry();
             var dto = LogEntryParser.ParseLogEntry(le);
-            dto.Data.Should().BeSameAs(le.Data);
+            dto.Payload.Should().BeSameAs(le.Payload);
         }
     }
 }

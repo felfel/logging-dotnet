@@ -49,7 +49,7 @@ namespace Felfel.Logging
         /// <summary>
         /// The actual structured payload to be serialized in JSON.
         /// </summary>
-        public object Data { get; set; }
+        public object Payload { get; set; }
 
         /// <summary>
         /// Optional exception information, if any.
