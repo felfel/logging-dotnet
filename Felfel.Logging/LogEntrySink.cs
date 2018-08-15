@@ -13,6 +13,12 @@ namespace Felfel.Logging
     /// </summary>
     public abstract class LogEntrySink : PeriodicBatchingSink
     {
+        /// <summary>
+        /// An optional application / service name that can be used as an identifier
+        /// for all logging coming out of a given application regardless the context.
+        /// </summary>
+        internal string AppName { get; set; }
+
         protected LogEntrySink(int batchSizeLimit, TimeSpan period) : base(batchSizeLimit, period)
         {
         }
@@ -58,7 +64,7 @@ namespace Felfel.Logging
                         LogLevel = LogLevel.Fatal,
                         Exception = logEvent.Exception,
                         Context = $"{nameof(HttpSink)}.Error",
-                        Data = new
+                        Payload = new
                         {
                             Error = "Could not unwrap log entry.",
                             Message = logEvent.RenderMessage(),
@@ -68,6 +74,7 @@ namespace Felfel.Logging
                 }
 
                 var dto = LogEntryParser.ParseLogEntry(logEntry);
+                dto.AppName = AppName;
                 return dto;
             }
             catch (Exception e)
@@ -89,7 +96,7 @@ namespace Felfel.Logging
                 Level = LogLevel.Fatal.ToString(),
                 Context = "Logging.Error",
                 PayloadType = "Logging.Error",
-                Data = new { Error = e.ToString() }
+                Payload = new { Error = e.ToString() }
             };
         }
     }

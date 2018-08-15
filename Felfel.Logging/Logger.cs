@@ -100,7 +100,7 @@ namespace Felfel.Logging
                 entry.Context = Context;
             }
 
-            if (PrefixPayloadType && !String.IsNullOrEmpty(Context))
+            if (PrefixPayloadType && !String.IsNullOrEmpty(entry.PayloadType) && !String.IsNullOrEmpty(Context))
             {
                 entry.PayloadType = $"{entry.Context}.{entry.PayloadType}";
             }

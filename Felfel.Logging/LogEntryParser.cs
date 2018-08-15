@@ -29,10 +29,17 @@ namespace Felfel.Logging
             //then a scalar.
             //We don't care about other primitives etc. If somebody
             //is stupid enough to log an int, it'll just get serialized
-            var data = entry.Data;
+            var data = entry.Payload;
             if (data is string)
             {
                 data = new { Message = data };
+            }
+
+            var payloadType = entry.PayloadType;
+            if (entry.Payload == null)
+            {
+                //omit the payload type if there is no payload in the first place
+                payloadType = null;
             }
 
             return new LogEntryDto
@@ -41,9 +48,9 @@ namespace Felfel.Logging
                 Level = entry.LogLevel.ToString(),
                 Context = entry.Context ?? "",
                 Message = String.IsNullOrEmpty(entry.Message) ? null : entry.Message,
-                PayloadType = entry.PayloadType ?? "",
-                Data = data,
-                Exception = exceptionInfo
+                PayloadType = payloadType,
+                Payload = data,
+                ExceptionInfo = exceptionInfo
             };
         }
     }

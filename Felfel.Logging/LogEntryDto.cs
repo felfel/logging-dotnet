@@ -8,10 +8,16 @@ namespace Felfel.Logging
     /// </summary>
     public class LogEntryDto
     {
-        internal const string DataPropertyPlaceholderName = "@logentry_data";
+        internal const string PayloadPropertyPlaceholderName = "@logentry_payload";
 
         [JsonProperty("@timestamp")]
         public DateTimeOffset Timestamp { get; set; }
+
+        /// <summary>
+        /// Optional application / service name.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string AppName { get; set; }
 
         /// <summary>
         /// The context / application area where the logged
@@ -19,11 +25,6 @@ namespace Felfel.Logging
         /// and identification of issues in code.
         /// </summary>
         public string Context { get; set; }
-
-        /// <summary>
-        /// Identifier that depicts the schema of the logged data.
-        /// </summary>
-        public string PayloadType { get; set; }
 
         /// <summary>
         /// Log Level.
@@ -34,7 +35,7 @@ namespace Felfel.Logging
         /// Indicates whether exception information is available or not.
         /// This simplifies querying for actualy exceptions.
         /// </summary>
-        public bool IsException => Exception != null;
+        public bool IsException => ExceptionInfo != null;
         
         /// <summary>
         /// Human readable complementary message. Optional, focus should be
@@ -44,19 +45,25 @@ namespace Felfel.Logging
         public string Message { get; set; }
 
         /// <summary>
+        /// Identifier that depicts the schema of the logged data.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string PayloadType { get; set; }
+
+        /// <summary>
         /// The actual structured payload to be serialized in JSON.
         /// <remarks>If null, is ignored. Nested null values will not be ignored
         /// by default.</remarks>
         /// </summary>
-        [JsonProperty(DataPropertyPlaceholderName, NullValueHandling = NullValueHandling.Ignore)]
-        public object Data { get; set; }
+        [JsonProperty(PayloadPropertyPlaceholderName, NullValueHandling = NullValueHandling.Ignore)]
+        public object Payload { get; set; }
 
         /// <summary>
         /// Optional exception information, if any. Not rendered in JSON if no
         /// exception was registered.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public ExceptionInfo Exception { get; set; }
+        public ExceptionInfo ExceptionInfo { get; set; }
     }
 
 

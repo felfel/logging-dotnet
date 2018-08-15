@@ -23,15 +23,17 @@ namespace Felfel.Logging
         public JsonSerializerSettings JsonSerializerSettings { get; }
 
         /// <summary>Creates the sink for a given collector endpoint.</summary>
+        /// <param name="appName">Application or service name.</param>
         /// <param name="endpointUri">Endpoint that contains the access token.</param>
         /// <param name="batchSizeLimit">The maximum number of events to include in a single batch.</param>
         /// <param name="period">The time to wait between checking for event batches.</param>
         /// <param name="clientBuilder">Optional client builder, which can be used to customize client
         /// calls (e.g. with custom request headers).</param>
-        public HttpSink(string endpointUri, int batchSizeLimit, TimeSpan period, Func<HttpClient> clientBuilder = null) : base(batchSizeLimit, period)
+        public HttpSink(string appName, string endpointUri, int batchSizeLimit, TimeSpan period, Func<HttpClient> clientBuilder = null) : base(batchSizeLimit, period)
         {
             EndpointUri = endpointUri;
             Client = clientBuilder == null ? new HttpClient() : clientBuilder();
+            AppName = appName;
 
             SnakeCasing = new SnakeCaseNamingStrategy();
             var contractResolver = new DefaultContractResolver
@@ -72,17 +74,17 @@ namespace Felfel.Logging
 
         private HttpContent CreateHttpContent(LogEntryDto content)
         {
-            var json = JsonConvert.SerializeObject(content, JsonSerializerSettings);
+            string json = JsonConvert.SerializeObject(content, JsonSerializerSettings);
 
             //customize the "data" property and use the document type as a property key instead.
             //this prevents indexing errors if two completely payloads have matching keys,
             //or if the data actually is a scalar value already.
-            if (content.Data != null)
+            if (content.Payload != null)
             {
                 string propertyName = String.IsNullOrEmpty(content.PayloadType) ? content.Context : content.PayloadType;
                 propertyName = propertyName.Replace(".", "_");
                 propertyName = SnakeCasing.GetPropertyName(propertyName, false);
-                json = json.Replace(LogEntryDto.DataPropertyPlaceholderName, propertyName);
+                json = json.Replace(LogEntryDto.PayloadPropertyPlaceholderName, propertyName);
             }
             
             var httpContent = new StringContent(json);
