@@ -22,6 +22,11 @@ namespace Felfel.Logging
             logger.Log(entry);
         }
 
+        public static void Debug(this Logger logger, string message)
+        {
+            WriteEntry(logger, LogLevel.Debug, null, null, null, message);
+        }
+
         public static void Debug(this Logger logger, string payloadType, object data, string message = null)
         {
             WriteEntry(logger, LogLevel.Debug, payloadType, data, null, message);
@@ -35,6 +40,11 @@ namespace Felfel.Logging
         public static void Debug(this Logger logger, Exception exception, string payloadType, object data, string message = null)
         {
             WriteEntry(logger, LogLevel.Debug, payloadType, data, exception, message);
+        }
+
+        public static void Information(this Logger logger, string message)
+        {
+            WriteEntry(logger, LogLevel.Info, null, null, null, message);
         }
 
         public static void Information(this Logger logger, string payloadType, object data, string message = null)
@@ -52,6 +62,11 @@ namespace Felfel.Logging
             WriteEntry(logger, LogLevel.Info, payloadType, data, exception, message);
         }
 
+        public static void Warning(this Logger logger, string message)
+        {
+            WriteEntry(logger, LogLevel.Warning, null, null, null, message);
+        }
+
         public static void Warning(this Logger logger, string payloadType, object data, string message = null)
         {
             WriteEntry(logger, LogLevel.Warning, payloadType, data, null, message);
@@ -67,6 +82,11 @@ namespace Felfel.Logging
             WriteEntry(logger, LogLevel.Warning, payloadType, data, exception, message);
         }
 
+        public static void Error(this Logger logger, string message)
+        {
+            WriteEntry(logger, LogLevel.Error, null, null, null, message);
+        }
+
         public static void Error(this Logger logger, string payloadType, object data, string message = null)
         {
             WriteEntry(logger, LogLevel.Error, payloadType, data, null, message);
@@ -80,6 +100,11 @@ namespace Felfel.Logging
         public static void Error(this Logger logger, Exception exception, string payloadType, object data, string message = null)
         {
             WriteEntry(logger, LogLevel.Error, payloadType, data, exception, message);
+        }
+
+        public static void Fatal(this Logger logger, string message)
+        {
+            WriteEntry(logger, LogLevel.Fatal, null, null, null, message);
         }
 
         public static void Fatal(this Logger logger, string payloadType, object data, string message = null)

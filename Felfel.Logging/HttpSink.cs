@@ -24,16 +24,18 @@ namespace Felfel.Logging
 
         /// <summary>Creates the sink for a given collector endpoint.</summary>
         /// <param name="appName">Application or service name.</param>
+        /// <param name="environment">Runtime environment (e.g. DEV or PROD).</param>
         /// <param name="endpointUri">Endpoint that contains the access token.</param>
         /// <param name="batchSizeLimit">The maximum number of events to include in a single batch.</param>
         /// <param name="period">The time to wait between checking for event batches.</param>
         /// <param name="clientBuilder">Optional client builder, which can be used to customize client
         /// calls (e.g. with custom request headers).</param>
-        public HttpSink(string appName, string endpointUri, int batchSizeLimit, TimeSpan period, Func<HttpClient> clientBuilder = null) : base(batchSizeLimit, period)
+        public HttpSink(string appName, string environment, string endpointUri, int batchSizeLimit, TimeSpan period, Func<HttpClient> clientBuilder = null) : base(batchSizeLimit, period)
         {
             EndpointUri = endpointUri;
             Client = clientBuilder == null ? new HttpClient() : clientBuilder();
             AppName = appName;
+            Environment = environment;
 
             SnakeCasing = new SnakeCaseNamingStrategy();
             var contractResolver = new DefaultContractResolver

@@ -52,7 +52,7 @@ namespace Felfel.Logging.UnitTests
         private LogEntryDto CreateDto(bool alternativeStackTrace = false, string message = errorMessage)
         {
             var le = new LogEntry { Exception = CreateException(alternativeStackTrace, message) };
-            return LogEntryParser.ParseLogEntry(le);
+            return LogEntryParser.ParseLogEntry(le, "app", "test");
         }
 
         private Exception CreateException(bool alternativeStackTrace, string message)
