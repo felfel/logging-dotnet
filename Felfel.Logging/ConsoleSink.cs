@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -13,7 +14,20 @@ namespace Felfel.Logging
         {
         }
 
-        protected override Task WriteLogEntry(LogEntryDto entryDto)
+        /// <summary>
+        /// Performs the actual serialization / logging of a batch of log entries.
+        /// </summary>
+        protected override Task WriteLogEntries(IEnumerable<LogEntryDto> entryDtos)
+        {
+            foreach (var dto in entryDtos)
+            {
+                WriteLogEntry(dto);
+            }
+
+            return null; //Task.CompletedTask only av. in .NET Standard
+        }
+
+        private void WriteLogEntry(LogEntryDto entryDto)
         {
             string json = JsonConvert.SerializeObject(entryDto, Formatting.Indented);
 
@@ -24,7 +38,6 @@ namespace Felfel.Logging
             }
             Console.WriteLine(json);
             Console.ResetColor();
-            return null; //Task.CompletedTask only av. in .NET Standard
         }
     }
 }

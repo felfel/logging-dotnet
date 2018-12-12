@@ -27,26 +27,20 @@ namespace Felfel.Logging
         protected LogEntrySink(int batchSizeLimit, TimeSpan period) : base(batchSizeLimit, period)
         {
         }
-
-
+        
         /// <summary>
         /// Extracts logged entries and forwards them for serialization.
         /// </summary>
-        protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
+        protected override Task EmitBatchAsync(IEnumerable<LogEvent> events)
         {
-            var tasks = events
-                .Select(ExtractLogEntry)
-                .Select(WriteLogEntry)
-                .Where(t => t != null);
-
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+            IEnumerable<LogEntryDto> logEntries = events.Select(ExtractLogEntry);
+            return WriteLogEntries(logEntries);
         }
 
-
         /// <summary>
-        /// Performs the actual serialization / logging of a log entry.
+        /// Performs the actual serialization / logging of a batch of log entries.
         /// </summary>
-        protected abstract Task WriteLogEntry(LogEntryDto entryDto);
+        protected abstract Task WriteLogEntries(IEnumerable<LogEntryDto> entryDtos);
 
         /// <summary>
         /// Parses a Serilog <see cref="LogEvent"/> and extracts the
