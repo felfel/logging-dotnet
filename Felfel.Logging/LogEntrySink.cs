@@ -19,29 +19,28 @@ namespace Felfel.Logging
         /// </summary>
         internal string AppName { get; set; }
 
+        /// <summary>
+        /// Whether the app runs in dev/test/staging/prod.
+        /// </summary>
+        internal string Environment { get; set; }
+
         protected LogEntrySink(int batchSizeLimit, TimeSpan period) : base(batchSizeLimit, period)
         {
         }
-
-
+        
         /// <summary>
         /// Extracts logged entries and forwards them for serialization.
         /// </summary>
-        protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
+        protected override Task EmitBatchAsync(IEnumerable<LogEvent> events)
         {
-            var tasks = events
-                .Select(ExtractLogEntry)
-                .Select(WriteLogEntry)
-                .Where(t => t != null);
-
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+            IEnumerable<LogEntryDto> logEntries = events.Select(ExtractLogEntry);
+            return WriteLogEntries(logEntries);
         }
 
-
         /// <summary>
-        /// Performs the actual serialization / logging of a log entry.
+        /// Performs the actual serialization / logging of a batch of log entries.
         /// </summary>
-        protected abstract Task WriteLogEntry(LogEntryDto entryDto);
+        protected abstract Task WriteLogEntries(IEnumerable<LogEntryDto> entryDtos);
 
         /// <summary>
         /// Parses a Serilog <see cref="LogEvent"/> and extracts the
@@ -73,8 +72,7 @@ namespace Felfel.Logging
                     };
                 }
 
-                var dto = LogEntryParser.ParseLogEntry(logEntry);
-                dto.AppName = AppName;
+                var dto = LogEntryParser.ParseLogEntry(logEntry, AppName, Environment);
                 return dto;
             }
             catch (Exception e)
@@ -93,6 +91,8 @@ namespace Felfel.Logging
             return new LogEntryDto
             {
                 Timestamp = DateTimeOffset.Now,
+                AppName = AppName,
+                Environment = Environment,
                 Level = LogLevel.Fatal.ToString(),
                 Context = "Logging.Error",
                 PayloadType = "Logging.Error",

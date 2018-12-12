@@ -14,6 +14,12 @@ namespace Felfel.Logging
         public DateTimeOffset Timestamp { get; set; }
 
         /// <summary>
+        /// Runtime environment (dev/test/prod)
+        /// </summary>
+        [JsonProperty("env", NullValueHandling = NullValueHandling.Ignore)]
+        public string Environment { get; set; }
+
+        /// <summary>
         /// Optional application / service name.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

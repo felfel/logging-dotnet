@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("Felfel.Logging.UnitTests")]
+[assembly: InternalsVisibleTo("Felfel.Logging.UnitTests")]
 
 namespace Felfel.Logging
 {
     internal static class LogEntryParser
     {
-        public static LogEntryDto ParseLogEntry(LogEntry entry)
+        public static LogEntryDto ParseLogEntry(LogEntry entry, string appName, string environment)
         {
             var exception = entry.Exception;
             ExceptionInfo exceptionInfo = null;
@@ -24,32 +24,38 @@ namespace Felfel.Logging
                 };
             }
 
-            //transparently wrap string values into an object to
+            //transparently assign string values to the message
+            //if there is none, otherwise wrap into an object to
             //ensure a logged payload is always a JSON object rather
             //then a scalar.
             //We don't care about other primitives etc. If somebody
             //is stupid enough to log an int, it'll just get serialized
-            var data = entry.Payload;
-            if (data is string)
+            var payload = entry.Payload;
+            var message = entry.Message;
+            if (payload is string)
             {
-                data = new { Message = data };
-            }
-
-            var payloadType = entry.PayloadType;
-            if (entry.Payload == null)
-            {
-                //omit the payload type if there is no payload in the first place
-                payloadType = null;
+                if (String.IsNullOrEmpty(message))
+                {
+                    //do not change the original entry - causes issues with multiple sinks
+                    message = payload as string;
+                    payload = null;
+                }
+                else
+                {
+                    payload = new { Message = payload };
+                }
             }
 
             return new LogEntryDto
             {
                 Timestamp = entry.TimestampOverride,
+                AppName = appName,
+                Environment = environment,
                 Level = entry.LogLevel.ToString(),
                 Context = entry.Context ?? "",
-                Message = String.IsNullOrEmpty(entry.Message) ? null : entry.Message,
-                PayloadType = payloadType,
-                Payload = data,
+                Message = String.IsNullOrEmpty(message) ? null : message,
+                PayloadType = entry.PayloadType,
+                Payload = payload,
                 ExceptionInfo = exceptionInfo
             };
         }
