@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Felfel.Logging
 {
@@ -55,5 +56,10 @@ namespace Felfel.Logging
         /// Optional exception information, if any.
         /// </summary>
         public Exception Exception { get; set; }
+
+        /// <summary>
+        /// Allows framework level enrichment of log entires with additional properties.
+        /// </summary>
+        public Dictionary<string, object> ContextData { get; } =  new Dictionary<string, object>();
     }
 }

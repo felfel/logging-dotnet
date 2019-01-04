@@ -5,13 +5,29 @@ using Serilog.Parsing;
 
 namespace Felfel.Logging
 {
+    public class Logger<T> : Logger, ILogger<T>
+    {
+        /// <summary>
+        /// Creates a new logger instance using the type name
+        /// as the <see cref="ILogger.Context"/>.
+        /// </summary>
+        /// <param name="prefixPayloadType">If true, the <see cref="LogEntry.PayloadType"/>
+        /// will be automatically prefixed with the logger's <see cref="ILogger.Context"/> in order
+        /// to create a qualified payload name, which reduces the risk of potential
+        /// duplicates across app/service.
+        /// </param>
+        public Logger(bool prefixPayloadType = true) : base(typeof(T).Name, prefixPayloadType)
+        {
+        }
+    }
+
     /// <summary>
     /// Primary façade for structured logging.
     /// <remarks>Having static builder methods is not a good practice, but will do for now given that
     /// we do not leverate dependency injection on our legacy infrastructure. You probably should not
     /// duplicate this pattern.</remarks>
     /// </summary>
-    public class Logger
+    public class Logger : ILogger
     {
         internal const string EntryPropertyName = nameof(LogEntry);
 
@@ -31,9 +47,9 @@ namespace Felfel.Logging
         /// <see cref="LogEntry.PayloadType"/> of a log entry
         /// in order to ensure a qualified (and unique) payload type name.
         /// </summary>
-        public bool PrefixPayloadType { get; }
+        public bool PrefixPayloadType { get; set; }
 
-        private Logger(string context, bool prefixPayloadType)
+        protected Logger(string context, bool prefixPayloadType)
         {
             Context = context;
             PrefixPayloadType = prefixPayloadType;
@@ -50,9 +66,9 @@ namespace Felfel.Logging
         /// to create a qualified payload name, which reduces the risk of potential
         /// duplicates across app/service.
         /// </param>
-        public static Logger Create<T>(bool prefixPayloadType = true)
+        public static ILogger<T> Create<T>(bool prefixPayloadType = true)
         {
-            return Create(typeof(T), prefixPayloadType);
+            return new Logger<T>(prefixPayloadType);
         }
 
         /// <summary>
@@ -67,9 +83,9 @@ namespace Felfel.Logging
         /// to create a qualified payload name, which reduces the risk of potential
         /// duplicates across app/service.
         /// </param>
-        public static Logger Create(Type contextType, bool prefixPayloadType = true)
+        public static ILogger Create(Type contextType, bool prefixPayloadType = true)
         {
-            return Create(contextType.Name);
+            return Create(contextType.Name, prefixPayloadType);
         }
 
         /// <summary>
@@ -83,7 +99,7 @@ namespace Felfel.Logging
         /// to create a qualified payload name, which reduces the risk of potential
         /// duplicates across app/service.
         /// </param>
-        public static Logger Create(string context = "", bool prefixPayloadType = true)
+        public static ILogger Create(string context = "", bool prefixPayloadType = true)
         {
             return new Logger(context, prefixPayloadType);
         }

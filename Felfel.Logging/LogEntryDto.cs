@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Felfel.Logging
@@ -70,6 +71,13 @@ namespace Felfel.Logging
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public ExceptionInfo ExceptionInfo { get; set; }
+
+        /// <summary>
+        /// Optional exception information, if any. Not rendered in JSON if no
+        /// exception was registered.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, object> ContextData { get; set; }
     }
 
 

@@ -56,7 +56,8 @@ namespace Felfel.Logging
                 Message = String.IsNullOrEmpty(message) ? null : message,
                 PayloadType = entry.PayloadType,
                 Payload = payload,
-                ExceptionInfo = exceptionInfo
+                ExceptionInfo = exceptionInfo,
+                ContextData = entry.ContextData.Count == 0 ? null : entry.ContextData
             };
         }
     }
