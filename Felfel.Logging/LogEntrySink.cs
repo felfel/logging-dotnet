@@ -63,7 +63,7 @@ namespace Felfel.Logging
                         LogLevel = ParseLevel(logEvent.Level),
                         Message = logEvent.RenderMessage(),
                         Exception = logEvent.Exception,
-                        Context = $"{nameof(HttpSink)}.Error"
+                        Context = $"{AppName}.Message"
                     };
                 }
 
