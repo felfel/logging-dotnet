@@ -53,17 +53,18 @@ namespace Felfel.Logging
             {
                 logEvent.Properties.TryGetValue(Logger.EntryPropertyName, out var entryProperty);
                 var logEntry = (entryProperty as ScalarValue)?.Value as LogEntry;
-                
+
                 if (logEntry == null)
                 {
                     //no log entry to unwrap - assume just a regular Serilog message that didn't come through the custom API
+                    var logLevel = ParseLevel(logEvent.Level);
                     logEntry = new LogEntry
                     {
                         TimestampOverride = logEvent.Timestamp,
-                        LogLevel = ParseLevel(logEvent.Level),
+                        LogLevel = logLevel,
                         Message = logEvent.RenderMessage(),
                         Exception = logEvent.Exception,
-                        Context = $"{AppName}.Message"
+                        Context = $"{AppName}.{logLevel}"
                     };
                 }
 
